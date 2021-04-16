@@ -10,15 +10,13 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "ordini")
@@ -41,30 +39,26 @@ public class Ordini implements java.io.Serializable {
 	@Column(name = "totale_prezzo")
 	private Double totPrezzo;
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "ordini_articoli", joinColumns = {
-			@JoinColumn(name = "id_ordine", referencedColumnName = "id_ordine") }, inverseJoinColumns = {
-					@JoinColumn(name = "id_articolo", referencedColumnName = "id_articolo") })
+	@OneToMany(mappedBy = "primaryKey.ordini", cascade = CascadeType.ALL)
+	private Set<OrdiniArticoli> ordiniArticoli;
 
-	private Set<Articoli> articoliAssociati;
-
-	public Ordini() {
-		articoliAssociati = new HashSet<Articoli>();
+	@JsonIgnore
+	public Set<OrdiniArticoli> getOrdiniArticoli() {
+		if (ordiniArticoli == null) {
+			ordiniArticoli = new HashSet<OrdiniArticoli>();
+		}
+		return ordiniArticoli;
 	}
 
 	@Transient
 	private List<Articoli> articoli;
 
+	public void setOrdiniArticoli(Set<OrdiniArticoli> ordiniArticoli) {
+		this.ordiniArticoli = ordiniArticoli;
+	}
+
 	public List<Articoli> getArticoli() {
 		return articoli;
-	}
-
-	public Set<Articoli> getArticoliAssociati() {
-		return articoliAssociati;
-	}
-
-	public void setArticoliAssociati(Set<Articoli> articoliAssociati) {
-		this.articoliAssociati = articoliAssociati;
 	}
 
 	public void setArticoli(List<Articoli> articoli) {
@@ -115,5 +109,4 @@ public class Ordini implements java.io.Serializable {
 		return serialVersionUID;
 	}
 
-	
 }

@@ -5,14 +5,15 @@ import static javax.persistence.GenerationType.IDENTITY;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "articoli")
@@ -34,20 +35,17 @@ public class Articoli implements java.io.Serializable {
 
 	@Column(name = "prezzo", nullable = false)
 	private Double prezzo;
-    
-	@ManyToMany(fetch = FetchType.LAZY, mappedBy = "articoliAssociati")
-	private Set<Ordini> ordiniAssociati;
 
-	public Articoli() {
-		ordiniAssociati = new HashSet<Ordini>();
+	@OneToMany(mappedBy = "primaryKey.articoli", cascade = CascadeType.ALL)
+	private Set<OrdiniArticoli> ordiniArticoli = new HashSet<>();
+
+	@JsonIgnore
+	public Set<OrdiniArticoli> getOrdiniArticoli() {
+		return ordiniArticoli;
 	}
 
-	public Set<Ordini> getOrdiniAssociati() {
-		return ordiniAssociati;
-	}
-
-	public void setOrdiniAssociati(Set<Ordini> ordiniAssociati) {
-		this.ordiniAssociati = ordiniAssociati;
+	public void setOrdiniArticoli(Set<OrdiniArticoli> ordiniArticoli) {
+		this.ordiniArticoli = ordiniArticoli;
 	}
 
 	public static long getSerialversionuid() {

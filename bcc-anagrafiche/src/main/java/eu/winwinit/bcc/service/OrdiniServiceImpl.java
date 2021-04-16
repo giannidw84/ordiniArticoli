@@ -22,36 +22,41 @@ public class OrdiniServiceImpl implements OrdiniService {
 	@Autowired
 	private ArticoliRepository articoliRepository;
 
-	public Ordini saveAndFlush(Ordini art) throws Exception {
+	public Ordini saveAndFlush(Ordini ordine) throws Exception {
 
 		double totPrezzoOrdine = 0;
 		int numTotaleArticoli = 0;
 
-		List<Articoli> articoli = art.getArticoli();
+		List<Articoli> articoli = ordine.getArticoli();
 
 		for (Articoli articoloRead : articoli) {
 			Articoli articolo = articoliRepository.findById(articoloRead.getIdArticolo()).get();
 			numTotaleArticoli++;
 			totPrezzoOrdine = totPrezzoOrdine + articolo.getPrezzo();
-			art.getArticoliAssociati().add(articolo);
-//			OrdiniArticoli ordArt = new OrdiniArticoli();
-//			ordArt.setTotale(numTotaleArticoli);
-//			ordArt.setOrdini(art);
-//			ordArt.setArticoli(articolo);
-//			art.getOrdiniArticoli().add(ordArt);
+			OrdiniArticoli ordArt = new OrdiniArticoli();
+			ordArt.setTotale(articolo.getPrezzo());
+			ordArt.setOrdini(ordine);
+			ordArt.setArticoli(articolo);
+			ordine.getOrdiniArticoli().add(ordArt);
 		}
 
 		if (numTotaleArticoli > 0) {
 			Date date = new Date();
 			Timestamp ts = new Timestamp(date.getTime());
-			art.setDataOrdine(ts);
-			art.setTotPrezzo(totPrezzoOrdine);
-			art.setTotaleArticoli(numTotaleArticoli);
-			ordiniRepository.saveAndFlush(art);
-			return art;
+			ordine.setDataOrdine(ts);
+			ordine.setTotPrezzo(totPrezzoOrdine);
+			ordine.setTotaleArticoli(numTotaleArticoli);
+			ordiniRepository.saveAndFlush(ordine);
+			return ordine;
 		} else {
 			return null;
 		}
+	}
+	
+	public Ordini deleteOrdineAll(int id) throws Exception {
+		Ordini deleted = ordiniRepository.findById(id).get();
+		ordiniRepository.deleteById(id);
+		return deleted;
 	}
 
 }
