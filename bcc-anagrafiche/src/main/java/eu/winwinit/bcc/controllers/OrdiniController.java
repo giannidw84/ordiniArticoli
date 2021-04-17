@@ -1,5 +1,7 @@
 package eu.winwinit.bcc.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import eu.winwinit.bcc.constants.AuthorityRolesConstants;
 import eu.winwinit.bcc.entities.Ordini;
 import eu.winwinit.bcc.model.BaseResponse;
 import eu.winwinit.bcc.model.OrdineResponse;
+import eu.winwinit.bcc.model.OrdiniResponse;
 import eu.winwinit.bcc.security.JwtTokenProvider;
 import eu.winwinit.bcc.service.ArticoliService;
 import eu.winwinit.bcc.service.OrdiniService;
@@ -34,6 +37,50 @@ public class OrdiniController {
 	@Autowired
 	OrdiniService ordiniService;
 
+	@RequestMapping(value = "/ordini-all", method = RequestMethod.GET)
+	public ResponseEntity<BaseResponse> ordiniSearch(
+			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken) throws Exception {
+		Set<String> rolesSetString = UtilClass
+				.fromGrantedAuthorityToStringSet(jwtTokenProvider.getRolesFromJWT(jwtToken));
+		OrdiniResponse resp = new OrdiniResponse();
+		List<Ordini> ordiniList = new ArrayList<Ordini>();
+		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_USER)) {
+			try {
+				ordiniList = ordiniService.findAll();
+				resp.setOrdini(ordiniList);
+				resp.success();
+			} catch (Exception e) {
+				exceptionHandling(resp, e);
+			}
+			return new ResponseEntity<>(resp, HttpStatus.OK);
+		} else {
+			resp.accessDeniedNoAdmin();
+			return new ResponseEntity<>(resp, HttpStatus.UNAUTHORIZED);
+		}
+	}
+
+	@RequestMapping(value = "/ordine-id", method = RequestMethod.GET)
+	public ResponseEntity<BaseResponse> ordineSearch(
+			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken , @RequestParam int id) throws Exception {
+		Set<String> rolesSetString = UtilClass
+				.fromGrantedAuthorityToStringSet(jwtTokenProvider.getRolesFromJWT(jwtToken));
+		OrdineResponse resp = new OrdineResponse();
+		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_USER)) {
+			try {
+				Ordini ordine = ordiniService.findById(id);
+				resp.setOrdine(ordine);
+				resp.success();
+			} catch (Exception e) {
+				exceptionHandling(resp, e);
+			}
+			return new ResponseEntity<>(resp, HttpStatus.OK);
+		} else {
+			resp.accessDeniedNoAdmin();
+			return new ResponseEntity<>(resp, HttpStatus.UNAUTHORIZED);
+		}
+	}
+
+
 	@RequestMapping(value = "/ordine-insert", method = RequestMethod.POST)
 	public ResponseEntity<BaseResponse> ordineInsert(
 			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestBody Ordini ord)
@@ -45,6 +92,52 @@ public class OrdiniController {
 			try {
 				Ordini saved = ordiniService.saveAndFlush(ord);
 				resp.setOrdine(saved);
+				resp.success();
+			} catch (Exception e) {
+				exceptionHandling(resp, e);
+			}
+			return new ResponseEntity<>(resp, HttpStatus.OK);
+		} else {
+			resp.accessDeniedNoAdmin();
+			return new ResponseEntity<>(resp, HttpStatus.UNAUTHORIZED);
+		}
+
+	}
+
+	@RequestMapping(value = "/ordine-aggiungi-articolo", method = RequestMethod.PATCH)
+	public ResponseEntity<BaseResponse> ordiniUpdateArticolo(
+			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestParam int id,
+			@RequestBody Ordini ord) throws Exception {
+		Set<String> rolesSetString = UtilClass
+				.fromGrantedAuthorityToStringSet(jwtTokenProvider.getRolesFromJWT(jwtToken));
+		OrdineResponse resp = new OrdineResponse();
+		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_USER)) {
+			try {
+				Ordini addArticoli = ordiniService.addArticoli(id, ord);
+				resp.setOrdine(addArticoli);
+				resp.success();
+			} catch (Exception e) {
+				exceptionHandling(resp, e);
+			}
+			return new ResponseEntity<>(resp, HttpStatus.OK);
+		} else {
+			resp.accessDeniedNoAdmin();
+			return new ResponseEntity<>(resp, HttpStatus.UNAUTHORIZED);
+		}
+
+	}
+
+	@RequestMapping(value = "/ordine-cancella-articolo", method = RequestMethod.PATCH)
+	public ResponseEntity<BaseResponse> ordiniDeleteArticolo(
+			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestParam int id,
+			@RequestBody Ordini ord) throws Exception {
+		Set<String> rolesSetString = UtilClass
+				.fromGrantedAuthorityToStringSet(jwtTokenProvider.getRolesFromJWT(jwtToken));
+		OrdineResponse resp = new OrdineResponse();
+		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_USER)) {
+			try {
+				Ordini deleteArticoli = ordiniService.deleteArticoli(id, ord);
+				resp.setOrdine(deleteArticoli);
 				resp.success();
 			} catch (Exception e) {
 				exceptionHandling(resp, e);

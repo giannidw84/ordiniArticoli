@@ -47,9 +47,12 @@ C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\jav
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\entities\Utente.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\repository\FilialeRepository.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\controllers\CustomerConfirmedListController.java
+C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\repository\OrdiniArticoliRepository.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\repository\RuoloRepository.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\security\JwtAuthenticationResponse.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\service\ClienteService.java
+C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\entities\OrdiniArticoliId.java
+C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\model\OrdiniResponse.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\service\ArticoliService.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\utility\ClienteGroupedInfo.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\controllers\ArticoliController.java

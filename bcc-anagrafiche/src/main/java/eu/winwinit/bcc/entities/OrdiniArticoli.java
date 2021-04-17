@@ -15,13 +15,12 @@ import javax.persistence.Transient;
 
 public class OrdiniArticoli implements java.io.Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private OrdiniArticoliId primaryKey = new OrdiniArticoliId();
 
+	Integer quantita;
+	
 	double totale;
 
 	@EmbeddedId
@@ -57,6 +56,15 @@ public class OrdiniArticoli implements java.io.Serializable {
 
 	public void setTotale(double totale) {
 		this.totale = totale;
+	}
+
+	
+	public Integer getQuantita() {
+		return quantita;
+	}
+
+	public void setQuantita(Integer quantita) {
+		this.quantita = quantita;
 	}
 
 	public static long getSerialversionuid() {

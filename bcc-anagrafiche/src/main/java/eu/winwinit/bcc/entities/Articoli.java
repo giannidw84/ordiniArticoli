@@ -3,6 +3,7 @@ package eu.winwinit.bcc.entities;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -12,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -35,6 +37,9 @@ public class Articoli implements java.io.Serializable {
 
 	@Column(name = "prezzo", nullable = false)
 	private Double prezzo;
+
+	@Transient
+	private Integer quantita;
 
 	@OneToMany(mappedBy = "primaryKey.articoli", cascade = CascadeType.ALL)
 	private Set<OrdiniArticoli> ordiniArticoli = new HashSet<>();
@@ -91,5 +96,14 @@ public class Articoli implements java.io.Serializable {
 	public void setPrezzo(Double prezzo) {
 		this.prezzo = prezzo;
 	}
+
+	public Integer getQuantita() {
+		return quantita;
+	}
+
+	public void setQuantita(Integer quantita) {
+		this.quantita = quantita;
+	}
+
 
 }

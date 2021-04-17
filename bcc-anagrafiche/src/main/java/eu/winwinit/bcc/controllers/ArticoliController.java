@@ -40,14 +40,19 @@ public class ArticoliController {
 				.fromGrantedAuthorityToStringSet(jwtTokenProvider.getRolesFromJWT(jwtToken));
 		ArticoliResponse resp = new ArticoliResponse();
 		List<Articoli> articoliList = new ArrayList<Articoli>();
-		try {
-			articoliList = articoliService.findAll();
-			resp.setArticoli(articoliList);
-			resp.success();
-		} catch (Exception e) {
-			exceptionHandling(resp, e);
+		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_USER)) {
+			try {
+				articoliList = articoliService.findAll();
+				resp.setArticoli(articoliList);
+				resp.success();
+			} catch (Exception e) {
+				exceptionHandling(resp, e);
+			}
+			return new ResponseEntity<>(resp, HttpStatus.OK);
+		} else {
+			resp.accessDeniedNoAdmin();
+			return new ResponseEntity<>(resp, HttpStatus.UNAUTHORIZED);
 		}
-		return new ResponseEntity<>(resp, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/articoli-insert", method = RequestMethod.POST)
@@ -75,14 +80,14 @@ public class ArticoliController {
 
 	@RequestMapping(value = "/articoli-update", method = RequestMethod.PATCH)
 	public ResponseEntity<BaseResponse> articoliUpdate(
-			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestParam int id, @RequestBody Articoli art)
-			throws Exception {
+			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestParam int id,
+			@RequestBody Articoli art) throws Exception {
 		Set<String> rolesSetString = UtilClass
 				.fromGrantedAuthorityToStringSet(jwtTokenProvider.getRolesFromJWT(jwtToken));
 		ArticoloResponse resp = new ArticoloResponse();
 		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_ADMIN)) {
 			try {
-				Articoli changed = articoliService.patch(id,art.getPrezzo());
+				Articoli changed = articoliService.patch(id, art.getPrezzo());
 				resp.setArticolo(changed);
 				resp.success();
 			} catch (Exception e) {
@@ -118,6 +123,7 @@ public class ArticoliController {
 		}
 
 	}
+
 	private void exceptionHandling(BaseResponse resp, Exception ex) {
 		resp.error();
 		String cause = "";
