@@ -41,6 +41,9 @@ public class Articoli implements java.io.Serializable {
 	@Transient
 	private Integer quantita;
 
+	@Transient
+	private String azione;
+
 	@OneToMany(mappedBy = "primaryKey.articoli", cascade = CascadeType.ALL)
 	private Set<OrdiniArticoli> ordiniArticoli = new HashSet<>();
 
@@ -105,5 +108,12 @@ public class Articoli implements java.io.Serializable {
 		this.quantita = quantita;
 	}
 
+	public String getAzione() {
+		return azione;
+	}
+
+	public void setAzione(String azione) {
+		this.azione = azione;
+	}
 
 }

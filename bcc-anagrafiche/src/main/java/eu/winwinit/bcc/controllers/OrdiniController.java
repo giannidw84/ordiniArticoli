@@ -114,8 +114,10 @@ public class OrdiniController {
 		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_USER)) {
 			try {
 				Ordini addArticoli = ordiniService.addArticoli(id, ord);
-				resp.setOrdine(addArticoli);
-				resp.success();
+// chiama findById per avere l'ordine aggiornato nella response				
+				Ordini ordineNew = ordiniService.findById(id);
+				resp.setOrdine(ordineNew);
+				resp.updateSuccess();
 			} catch (Exception e) {
 				exceptionHandling(resp, e);
 			}
@@ -137,8 +139,10 @@ public class OrdiniController {
 		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_USER)) {
 			try {
 				Ordini deleteArticoli = ordiniService.deleteArticoli(id, ord);
-				resp.setOrdine(deleteArticoli);
-				resp.success();
+// chiama findById per avere l'ordine aggiornato nella response				
+				Ordini ordineNew = ordiniService.findById(id);
+				resp.setOrdine(ordineNew);
+				resp.updateSuccess();
 			} catch (Exception e) {
 				exceptionHandling(resp, e);
 			}
@@ -161,7 +165,7 @@ public class OrdiniController {
 			try {
 				Ordini deleted = ordiniService.deleteOrdineAll(id);
 				resp.setOrdine(deleted);
-				resp.success();
+				resp.deleteSuccess();
 			} catch (Exception e) {
 				exceptionHandling(resp, e);
 			}

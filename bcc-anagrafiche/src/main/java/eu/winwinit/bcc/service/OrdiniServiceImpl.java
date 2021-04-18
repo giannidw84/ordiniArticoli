@@ -73,7 +73,6 @@ public class OrdiniServiceImpl implements OrdiniService {
 		int numTotaleArticoli = 0;
 
 		List<Articoli> articoli = ordine.getArticoli();
-		List<Articoli> dettaglioArticolo = new ArrayList<Articoli>();
 
 		for (Articoli articoloRead : articoli) {
 			Articoli articolo = articoliRepository.findById(articoloRead.getIdArticolo()).get();
@@ -85,14 +84,9 @@ public class OrdiniServiceImpl implements OrdiniService {
 			ordArt.setOrdini(ordine);
 			ordArt.setArticoli(articolo);
 			ordine.getOrdiniArticoli().add(ordArt);
-
-// valorizzo il dettaglio dell'articolo per la response	
-			articolo.setQuantita(articoloRead.getQuantita());
-			dettaglioArticolo.add(articolo);
 		}
 
 		if (numTotaleArticoli > 0) {
-			ordine.setArticoli(dettaglioArticolo);
 			Date date = new Date();
 			Timestamp ts = new Timestamp(date.getTime());
 			ordine.setDataOrdine(ts);
@@ -116,7 +110,6 @@ public class OrdiniServiceImpl implements OrdiniService {
 			int numTotaleArticoli = 0;
 
 			List<Articoli> articoli = ordini.getArticoli();
-			List<Articoli> dettaglioArticolo = new ArrayList<Articoli>();
 
 			for (Articoli articoloRead : articoli) {
 				Articoli articolo = articoliRepository.findById(articoloRead.getIdArticolo()).get();
@@ -128,14 +121,9 @@ public class OrdiniServiceImpl implements OrdiniService {
 				ordArt.setOrdini(ordine);
 				ordArt.setArticoli(articolo);
 				ordine.getOrdiniArticoli().add(ordArt);
-
-// valorizzo il dettaglio dell'articolo per la response	
-				articolo.setQuantita(articoloRead.getQuantita());
-				dettaglioArticolo.add(articolo);
 			}
 
 			if (numTotaleArticoli > 0) {
-				ordine.setArticoli(dettaglioArticolo);
 				Date date = new Date();
 				Timestamp ts = new Timestamp(date.getTime());
 				ordine.setDataOrdine(ts);
@@ -149,6 +137,52 @@ public class OrdiniServiceImpl implements OrdiniService {
 
 	}
 
+//	public Ordini VariaArticoli(int id, Ordini ordini) throws Exception {
+//		Ordini ordine = ordiniRepository.findById(id).get();
+//
+//		if (ordine != null) {
+//
+//			double totPrezzoOrdine = ordine.getTotPrezzo();
+//			int numTotaleArticoli = ordine.getTotaleArticoli();
+//
+//			List<Articoli> articoli = ordini.getArticoli();
+//
+//			for (Articoli articoloRead : articoli) {
+//				OrdiniArticoli ordArt = ordiniArticoliRepository.findOrdineArticolo(id, articoloRead.getIdArticolo());
+//				numTotaleArticoli = numTotaleArticoli - ordArt.getQuantita();
+//				totPrezzoOrdine = totPrezzoOrdine - ordArt.getTotale();
+//				ordiniArticoliRepository.delete(ordArt);
+//				ordine.getOrdiniArticoli().remove(ordArt);
+//				
+//				if (articoloRead.getAzione().contains("varia")) {
+//					Articoli articolo = articoliRepository.findById(articoloRead.getIdArticolo()).get();
+//					numTotaleArticoli = numTotaleArticoli + articoloRead.getQuantita();
+//					totPrezzoOrdine = totPrezzoOrdine + (articolo.getPrezzo() * articoloRead.getQuantita());
+//					OrdiniArticoli ordArtNew = new OrdiniArticoli();
+//					ordArtNew.setQuantita(articoloRead.getQuantita());
+//					ordArtNew.setTotale(articolo.getPrezzo() * articoloRead.getQuantita());
+//					ordArtNew.setOrdini(ordine);
+//					ordArtNew.setArticoli(articolo);
+//					ordine.getOrdiniArticoli().add(ordArtNew);
+//				}
+//			}
+//
+//			if (numTotaleArticoli > 0) {
+//				Date date = new Date();
+//				Timestamp ts = new Timestamp(date.getTime());
+//				ordine.setDataOrdine(ts);
+//				ordine.setTotPrezzo(totPrezzoOrdine);
+//				ordine.setTotaleArticoli(numTotaleArticoli);
+//				ordiniRepository.saveAndFlush(ordine);
+//				return ordine;
+//			} else {
+//				ordiniRepository.deleteById(id);
+//			}
+//		}
+//		return ordini;
+//
+//	}
+//
 	public Ordini deleteArticoli(int id, Ordini ordini) throws Exception {
 		Ordini ordine = ordiniRepository.findById(id).get();
 

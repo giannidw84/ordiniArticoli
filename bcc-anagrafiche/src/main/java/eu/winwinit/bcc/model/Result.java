@@ -4,6 +4,10 @@ public class Result {
 
 	public static final int SUCCESS_CODE = 0;
 	public static final String SUCCESS_DESCRIPTION = "success";
+	public static final int DELETE_SUCCESS_CODE = 0;
+	public static final String DELETE_SUCCESS_DESCRIPTION = "cancellation executed";
+	public static final int UPDATE_SUCCESS_CODE = 0;
+	public static final String UPDATE_SUCCESS_DESCRIPTION = "update executed";
 	public static final int ERROR_CODE = -1;
 	public static final String ERROR_DESCRIPTION = "error";
 	public static final int NO_DATA_FOUND_CODE = 404;
@@ -45,6 +49,19 @@ public class Result {
 		return result;
 	}
 
+	public static Result createdDeleteSuccessResult() {
+		Result result = new Result();
+		result.setCode(DELETE_SUCCESS_CODE);
+		result.setDescription(DELETE_SUCCESS_DESCRIPTION);
+		return result;
+	}
+
+	public static Result createdUpdateSuccessResult() {
+		Result result = new Result();
+		result.setCode(UPDATE_SUCCESS_CODE);
+		result.setDescription(UPDATE_SUCCESS_DESCRIPTION);
+		return result;
+	}
 	public static Result createErrorResult() {
 		Result result = new Result();
 		result.setCode(ERROR_CODE);

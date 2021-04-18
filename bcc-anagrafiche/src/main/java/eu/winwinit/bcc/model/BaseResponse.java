@@ -16,6 +16,14 @@ public class BaseResponse {
 		this.result = Result.createSuccessResult();
 	}
 
+	public void deleteSuccess() {
+		this.result = Result.createdDeleteSuccessResult();
+	}
+
+	public void updateSuccess() {
+		this.result = Result.createdUpdateSuccessResult();
+	}
+
 	public void error() {
 		this.result = Result.createErrorResult();
 	}

@@ -89,7 +89,7 @@ public class ArticoliController {
 			try {
 				Articoli changed = articoliService.patch(id, art.getPrezzo());
 				resp.setArticolo(changed);
-				resp.success();
+				resp.updateSuccess();
 			} catch (Exception e) {
 				exceptionHandling(resp, e);
 			}
@@ -112,7 +112,7 @@ public class ArticoliController {
 			try {
 				Articoli deleted = articoliService.delete(id);
 				resp.setArticolo(deleted);
-				resp.success();
+				resp.deleteSuccess();
 			} catch (Exception e) {
 				exceptionHandling(resp, e);
 			}
