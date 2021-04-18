@@ -61,7 +61,8 @@ public class OrdiniController {
 
 	@RequestMapping(value = "/ordine-id", method = RequestMethod.GET)
 	public ResponseEntity<BaseResponse> ordineSearch(
-			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken , @RequestParam int id) throws Exception {
+			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestParam int id)
+			throws Exception {
 		Set<String> rolesSetString = UtilClass
 				.fromGrantedAuthorityToStringSet(jwtTokenProvider.getRolesFromJWT(jwtToken));
 		OrdineResponse resp = new OrdineResponse();
@@ -80,7 +81,6 @@ public class OrdiniController {
 		}
 	}
 
-
 	@RequestMapping(value = "/ordine-insert", method = RequestMethod.POST)
 	public ResponseEntity<BaseResponse> ordineInsert(
 			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestBody Ordini ord)
@@ -91,7 +91,9 @@ public class OrdiniController {
 		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_USER)) {
 			try {
 				Ordini saved = ordiniService.saveAndFlush(ord);
-				resp.setOrdine(saved);
+				// chiama findById per avere l'ordine aggiornato nella response
+				Ordini ordineNew = ordiniService.findById(saved.getIdOrdine());
+				resp.setOrdine(ordineNew);
 				resp.success();
 			} catch (Exception e) {
 				exceptionHandling(resp, e);
@@ -101,10 +103,9 @@ public class OrdiniController {
 			resp.accessDeniedNoAdmin();
 			return new ResponseEntity<>(resp, HttpStatus.UNAUTHORIZED);
 		}
-
 	}
 
-	@RequestMapping(value = "/ordine-aggiungi-articolo", method = RequestMethod.PATCH)
+	@RequestMapping(value = "/varia-ordine", method = RequestMethod.PATCH)
 	public ResponseEntity<BaseResponse> ordiniAddArticolo(
 			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestParam int id,
 			@RequestBody Ordini ord) throws Exception {
@@ -113,32 +114,7 @@ public class OrdiniController {
 		OrdineResponse resp = new OrdineResponse();
 		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_USER)) {
 			try {
-				Ordini addArticoli = ordiniService.addArticoli(id, ord);
-// chiama findById per avere l'ordine aggiornato nella response				
-				Ordini ordineNew = ordiniService.findById(id);
-				resp.setOrdine(ordineNew);
-				resp.updateSuccess();
-			} catch (Exception e) {
-				exceptionHandling(resp, e);
-			}
-			return new ResponseEntity<>(resp, HttpStatus.OK);
-		} else {
-			resp.accessDeniedNoAdmin();
-			return new ResponseEntity<>(resp, HttpStatus.UNAUTHORIZED);
-		}
-
-	}
-
-	@RequestMapping(value = "/ordine-cancella-articolo", method = RequestMethod.PATCH)
-	public ResponseEntity<BaseResponse> ordiniDeleteArticolo(
-			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestParam int id,
-			@RequestBody Ordini ord) throws Exception {
-		Set<String> rolesSetString = UtilClass
-				.fromGrantedAuthorityToStringSet(jwtTokenProvider.getRolesFromJWT(jwtToken));
-		OrdineResponse resp = new OrdineResponse();
-		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_USER)) {
-			try {
-				Ordini deleteArticoli = ordiniService.deleteArticoli(id, ord);
+				Ordini variaOrdine = ordiniService.variaOrdine(id, ord);
 // chiama findById per avere l'ordine aggiornato nella response				
 				Ordini ordineNew = ordiniService.findById(id);
 				resp.setOrdine(ordineNew);
@@ -163,7 +139,7 @@ public class OrdiniController {
 		OrdineResponse resp = new OrdineResponse();
 		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_USER)) {
 			try {
-				Ordini deleted = ordiniService.deleteOrdineAll(id);
+				Ordini deleted = ordiniService.deleteOrdine(id);
 				resp.setOrdine(deleted);
 				resp.deleteSuccess();
 			} catch (Exception e) {
