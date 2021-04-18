@@ -28,7 +28,7 @@ public class OrdiniServiceImpl implements OrdiniService {
 	private OrdiniArticoliRepository ordiniArticoliRepository;
 
 	public List<Ordini> findAll() throws Exception {
-		
+
 		List<Ordini> ordini = ordiniRepository.findAll();
 
 // popolo la response con i dettagli dell'ordine
@@ -160,7 +160,7 @@ public class OrdiniServiceImpl implements OrdiniService {
 			List<Articoli> articoli = ordini.getArticoli();
 
 			for (Articoli articoloRead : articoli) {
-				OrdiniArticoli ordArt = ordiniArticoliRepository.findOrdineArticolo(id,articoloRead.getIdArticolo());
+				OrdiniArticoli ordArt = ordiniArticoliRepository.findOrdineArticolo(id, articoloRead.getIdArticolo());
 				numTotaleArticoli = numTotaleArticoli - ordArt.getQuantita();
 				totPrezzoOrdine = totPrezzoOrdine - ordArt.getTotale();
 				ordiniArticoliRepository.delete(ordArt);
@@ -174,11 +174,14 @@ public class OrdiniServiceImpl implements OrdiniService {
 				ordine.setTotaleArticoli(numTotaleArticoli);
 				ordiniRepository.saveAndFlush(ordine);
 				return ordine;
+			} else {
+				ordiniRepository.deleteById(id);
 			}
 		}
 		return ordini;
 
 	}
+
 	public Ordini deleteOrdineAll(int id) throws Exception {
 		Ordini deleted = ordiniRepository.findById(id).get();
 		ordiniRepository.deleteById(id);

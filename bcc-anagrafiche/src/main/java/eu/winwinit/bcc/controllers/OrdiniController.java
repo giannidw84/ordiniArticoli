@@ -105,7 +105,7 @@ public class OrdiniController {
 	}
 
 	@RequestMapping(value = "/ordine-aggiungi-articolo", method = RequestMethod.PATCH)
-	public ResponseEntity<BaseResponse> ordiniUpdateArticolo(
+	public ResponseEntity<BaseResponse> ordiniAddArticolo(
 			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestParam int id,
 			@RequestBody Ordini ord) throws Exception {
 		Set<String> rolesSetString = UtilClass
