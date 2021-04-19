@@ -108,11 +108,11 @@ public class OrdiniServiceImpl implements OrdiniService {
 			for (Articoli articoloRead : articoli) {
 				OrdiniArticoli ordArt = ordiniArticoliRepository.findOrdineArticolo(id, articoloRead.getIdArticolo());
 				Articoli articolo = articoliRepository.findById(articoloRead.getIdArticolo()).get();
+				OrdiniArticoli ordArtNew = new OrdiniArticoli();
 
 				switch (articoloRead.getAzione()) {
 
 				case "nuovo":
-					OrdiniArticoli ordArtNew = new OrdiniArticoli();
 					numTotaleArticoli = numTotaleArticoli + articoloRead.getQuantita();
 					totPrezzoOrdine = totPrezzoOrdine + (articolo.getPrezzo() * articoloRead.getQuantita());
 					ordArtNew.setOrdini(ordine);
@@ -120,25 +120,28 @@ public class OrdiniServiceImpl implements OrdiniService {
 					ordArtNew.setQuantita(articoloRead.getQuantita());
 					ordArtNew.setTotale(articolo.getPrezzo() * articoloRead.getQuantita());
 					ordine.getOrdiniArticoli().add(ordArtNew);
-					break;					
+					break;
+
 				case "varia":
-					// nuova quantita (totale quantita ordine - quantita ordine da modificare) +
-					// nuova quantita
+// nuova quantita (totale quantita ordine - quantita ordine da modificare) + nuova quantita
+
 					numTotaleArticoli = (numTotaleArticoli - ordArt.getQuantita()) + articoloRead.getQuantita();
-					// nuovo importo totale ordine (totale ordine - importo totale articolo da
-					// modificare) + (prezzo articolo * quantita)
+// nuovo importo totale ordine (totale ordine - importo totale articolo da modificare) + (prezzo articolo * quantita)
+
 					totPrezzoOrdine = (totPrezzoOrdine - ordArt.getTotale())
 							+ (articolo.getPrezzo() * articoloRead.getQuantita());
 					ordArt.setQuantita(articoloRead.getQuantita());
 					ordArt.setTotale(articolo.getPrezzo() * articoloRead.getQuantita());
 					ordiniArticoliRepository.saveAndFlush(ordArt);
 					break;
-					
+
 				case "cancella":
 					numTotaleArticoli = numTotaleArticoli - ordArt.getQuantita();
 					totPrezzoOrdine = totPrezzoOrdine - ordArt.getTotale();
+					ordine.getOrdiniArticoli().remove(ordArt);
 					ordiniArticoliRepository.delete(ordArt);
 					break;
+
 				}
 			}
 

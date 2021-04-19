@@ -1,19 +1,16 @@
 package eu.winwinit.bcc.config;
 
-import eu.winwinit.bcc.service.UtenteService;
-
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -25,6 +22,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import eu.winwinit.bcc.security.JWTAuthenticationEntryPoint;
 import eu.winwinit.bcc.security.JwtAuthenticationFilter;
+import eu.winwinit.bcc.service.UtenteService;
 
 @Configuration
 @EnableWebSecurity
@@ -47,6 +45,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/v2/api-docs",
+                                   "/configuration/ui",
+                                   "/swagger-resources/**",
+                                   "/configuration/security",
+                                   "/swagger-ui/*",
+                                   "/webjars/**");
+    }
+    
     // Autenticazione e autorizzazione con JWTs
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -59,15 +67,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             "/api/v1/login",
                             "/api/v1/articoli",
                             "/api/v2/**",
-                            "/api/v1/checkToken",
-                            "/v2/api-docs",
-                            "/configuration/ui",
-                            "/swagger-resources",
-                            "/configuration/security",
-                            "/swagger-ui.html",
-                            "/webjars/**",
-                            "/swagger-resources/**",
-                            "/configuration/**"
+                            "/api/v1/checkToken"
+//                            "/v2/api-docs",
+//                            "/configuration/ui",
+//                            "/swagger-resources",
+//                            "/configuration/security"
+//                            "/swagger-ui.html",
+//                            "/webjars/**",
+//                            "/swagger-resources/**",
+//                            "/configuration/**"
                     ).permitAll()
                     .anyRequest().fullyAuthenticated()                   
                     .and().formLogin().loginPage("/login").permitAll()
