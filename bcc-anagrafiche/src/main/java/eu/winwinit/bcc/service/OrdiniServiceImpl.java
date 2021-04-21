@@ -1,8 +1,6 @@
 package eu.winwinit.bcc.service;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,9 +84,6 @@ public class OrdiniServiceImpl implements OrdiniService {
 			ordine.getOrdiniArticoli().add(ordArt);
 		}
 
-		Date date = new Date();
-		Timestamp ts = new Timestamp(date.getTime());
-		ordine.setDataOrdine(ts);
 		ordine.setTotPrezzo(totPrezzoOrdine);
 		ordine.setTotaleArticoli(numTotaleArticoli);
 		ordiniRepository.saveAndFlush(ordine);
@@ -146,9 +141,6 @@ public class OrdiniServiceImpl implements OrdiniService {
 			}
 
 			if (numTotaleArticoli > 0) {
-				Date date = new Date();
-				Timestamp ts = new Timestamp(date.getTime());
-				ordine.setDataOrdine(ts);
 				ordine.setTotPrezzo(totPrezzoOrdine);
 				ordine.setTotaleArticoli(numTotaleArticoli);
 				ordiniRepository.saveAndFlush(ordine);
