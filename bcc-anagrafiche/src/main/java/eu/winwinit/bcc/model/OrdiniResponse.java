@@ -2,17 +2,17 @@ package eu.winwinit.bcc.model;
 
 import java.util.List;
 
-import eu.winwinit.bcc.entities.Ordini;
+import eu.winwinit.bcc.entities.Ordine;
 
 public class OrdiniResponse extends BaseResponse {
 
-	private List<Ordini> ordini;
+	private List<Ordine> ordini;
 
-	public List<Ordini> getOrdini() {
+	public List<Ordine> getOrdini() {
 		return ordini;
 	}
 
-	public void setOrdini(List<Ordini> ordini) {
+	public void setOrdini(List<Ordine> ordini) {
 		this.ordini = ordini;
 	}
 

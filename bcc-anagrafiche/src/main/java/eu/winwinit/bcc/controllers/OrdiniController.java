@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import eu.winwinit.bcc.constants.AuthorityRolesConstants;
-import eu.winwinit.bcc.entities.Ordini;
+import eu.winwinit.bcc.entities.Ordine;
+import eu.winwinit.bcc.model.ArticoloDettaglioOrdine;
 import eu.winwinit.bcc.model.BaseResponse;
-import eu.winwinit.bcc.model.OrdineResponse;
 import eu.winwinit.bcc.model.OrdiniResponse;
 import eu.winwinit.bcc.security.JwtTokenProvider;
 import eu.winwinit.bcc.service.ArticoliService;
@@ -43,10 +43,9 @@ public class OrdiniController {
 		Set<String> rolesSetString = UtilClass
 				.fromGrantedAuthorityToStringSet(jwtTokenProvider.getRolesFromJWT(jwtToken));
 		OrdiniResponse resp = new OrdiniResponse();
-		List<Ordini> ordiniList = new ArrayList<Ordini>();
 		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_USER)) {
 			try {
-				ordiniList = ordiniService.findAll();
+				List<Ordine> ordiniList = ordiniService.findAll();
 				resp.setOrdini(ordiniList);
 				resp.success();
 			} catch (Exception e) {
@@ -61,15 +60,15 @@ public class OrdiniController {
 
 	@RequestMapping(value = "/ordine-id", method = RequestMethod.GET)
 	public ResponseEntity<BaseResponse> ordineSearch(
-			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestParam int id)
+			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestParam int idOrdine)
 			throws Exception {
 		Set<String> rolesSetString = UtilClass
 				.fromGrantedAuthorityToStringSet(jwtTokenProvider.getRolesFromJWT(jwtToken));
-		OrdineResponse resp = new OrdineResponse();
+		OrdiniResponse resp = new OrdiniResponse();
 		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_USER)) {
 			try {
-				Ordini ordine = ordiniService.findById(id);
-				resp.setOrdine(ordine);
+				List<Ordine> ordiniList = ordiniService.findById(idOrdine);
+				resp.setOrdini(ordiniList);
 				resp.success();
 			} catch (Exception e) {
 				exceptionHandling(resp, e);
@@ -83,17 +82,15 @@ public class OrdiniController {
 
 	@RequestMapping(value = "/ordine-insert", method = RequestMethod.POST)
 	public ResponseEntity<BaseResponse> ordineInsert(
-			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestBody Ordini ord)
+			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestBody Ordine ord)
 			throws Exception {
 		Set<String> rolesSetString = UtilClass
 				.fromGrantedAuthorityToStringSet(jwtTokenProvider.getRolesFromJWT(jwtToken));
-		OrdineResponse resp = new OrdineResponse();
+		OrdiniResponse resp = new OrdiniResponse();
 		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_USER)) {
 			try {
-				Ordini saved = ordiniService.saveAndFlush(ord);
-				// chiama findById per avere l'ordine aggiornato nella response
-				Ordini ordineNew = ordiniService.findById(saved.getIdOrdine());
-				resp.setOrdine(ordineNew);
+				List<Ordine> ordiniList = ordiniService.saveAndFlush(ord);
+				resp.setOrdini(ordiniList);
 				resp.success();
 			} catch (Exception e) {
 				exceptionHandling(resp, e);
@@ -107,17 +104,16 @@ public class OrdiniController {
 
 	@RequestMapping(value = "/varia-ordine", method = RequestMethod.PATCH)
 	public ResponseEntity<BaseResponse> ordiniAddArticolo(
-			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestParam int id,
-			@RequestBody Ordini ord) throws Exception {
+			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestParam int idOrdine,
+			@RequestBody Ordine ord) throws Exception {
 		Set<String> rolesSetString = UtilClass
 				.fromGrantedAuthorityToStringSet(jwtTokenProvider.getRolesFromJWT(jwtToken));
-		OrdineResponse resp = new OrdineResponse();
+		OrdiniResponse resp = new OrdiniResponse();
+
 		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_USER)) {
 			try {
-				Ordini variaOrdine = ordiniService.variaOrdine(id, ord);
-// chiama findById per avere l'ordine aggiornato nella response				
-				Ordini ordineNew = ordiniService.findById(id);
-				resp.setOrdine(ordineNew);
+				List<Ordine> ordiniList = ordiniService.variaOrdine(idOrdine, ord);
+				resp.setOrdini(ordiniList);
 				resp.updateSuccess();
 			} catch (Exception e) {
 				exceptionHandling(resp, e);
@@ -132,15 +128,16 @@ public class OrdiniController {
 
 	@RequestMapping(value = "/ordini-delete-all", method = RequestMethod.DELETE)
 	public ResponseEntity<BaseResponse> ordiniDeleteAll(
-			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestParam int id)
+			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestParam int idOrdine)
 			throws Exception {
 		Set<String> rolesSetString = UtilClass
 				.fromGrantedAuthorityToStringSet(jwtTokenProvider.getRolesFromJWT(jwtToken));
-		OrdineResponse resp = new OrdineResponse();
+		OrdiniResponse resp = new OrdiniResponse();
+
 		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_USER)) {
 			try {
-				Ordini deleted = ordiniService.deleteOrdine(id);
-				resp.setOrdine(deleted);
+				List<Ordine> ordiniList = ordiniService.deleteOrdine(idOrdine);
+				resp.setOrdini(ordiniList);
 				resp.deleteSuccess();
 			} catch (Exception e) {
 				exceptionHandling(resp, e);

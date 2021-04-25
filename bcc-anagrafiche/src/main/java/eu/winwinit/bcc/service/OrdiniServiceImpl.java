@@ -6,9 +6,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import eu.winwinit.bcc.entities.Articoli;
-import eu.winwinit.bcc.entities.Ordini;
+import eu.winwinit.bcc.entities.Articolo;
+import eu.winwinit.bcc.entities.Ordine;
 import eu.winwinit.bcc.entities.OrdiniArticoli;
+import eu.winwinit.bcc.model.ArticoloDettaglioOrdine;
 import eu.winwinit.bcc.repository.ArticoliRepository;
 import eu.winwinit.bcc.repository.OrdiniArticoliRepository;
 import eu.winwinit.bcc.repository.OrdiniRepository;
@@ -25,137 +26,157 @@ public class OrdiniServiceImpl implements OrdiniService {
 	@Autowired
 	private OrdiniArticoliRepository ordiniArticoliRepository;
 
-	public List<Ordini> findAll() throws Exception {
+	public List<Ordine> findAll() throws Exception {
 
-		List<Ordini> ordini = ordiniRepository.findAll();
+		List<Ordine> ordiniList = ordiniRepository.findAll();
 
-// popolo la response con i dettagli dell'ordine
-
-		for (Ordini ordineRead : ordini) {
-// per ogni ordine estraggo dalla tabella ordini_articoli il campo id_articoli			
-			List<OrdiniArticoli> ordineArticoliRead = ordiniArticoliRepository.findOrdini(ordineRead.getIdOrdine());
-
-			List<Articoli> dettaglioArticolo = new ArrayList<Articoli>();
-
-			for (OrdiniArticoli elaboraIdArticolo : ordineArticoliRead) {
-// per ogni id articolo ricava la descrizione, prezzo ... dell'articolo	
-				Articoli articolo = articoliRepository
-						.findByIdArticolo(elaboraIdArticolo.getArticoli().getIdArticolo());
-				articolo.setQuantita(elaboraIdArticolo.getQuantita());
-				dettaglioArticolo.add(articolo);
-			}
-			ordineRead.setArticoli(dettaglioArticolo);
+		for (Ordine ordineRead : ordiniList) {
+			ordineRead.setArticoloDettaglioOrdine(createListArticoliForResponse(ordineRead));
 		}
-		return ordini;
+		return ordiniList;
 	}
 
-	public Ordini findById(int id) throws Exception {
-		Ordini ordini = ordiniRepository.findById(id).get();
-		List<OrdiniArticoli> ordineArticoliRead = ordiniArticoliRepository.findOrdini(ordini.getIdOrdine());
-
-		List<Articoli> dettaglioArticolo = new ArrayList<Articoli>();
-
-		for (OrdiniArticoli elaboraIdArticolo : ordineArticoliRead) {
-//per ogni id articolo ricava la descrizione, prezzo ... dell'articolo	
-			Articoli articolo = articoliRepository.findByIdArticolo(elaboraIdArticolo.getArticoli().getIdArticolo());
-			articolo.setQuantita(elaboraIdArticolo.getQuantita());
-			dettaglioArticolo.add(articolo);
-		}
-		ordini.setArticoli(dettaglioArticolo);
-		return ordini;
+	public List<Ordine> findById(int idOrdine) throws Exception {
+		List<Ordine> ordine = new ArrayList<Ordine>();
+		Ordine ordini = ordiniRepository.findById(idOrdine).get();
+		ordini.setArticoloDettaglioOrdine(createListArticoliForResponse(ordini));
+		ordine.add(ordini);
+		return ordine;
 	}
 
-	public Ordini saveAndFlush(Ordini ordine) throws Exception {
+	public List<Ordine> saveAndFlush(Ordine ordineInsert) throws Exception {
 
+		List<Ordine> ordine = new ArrayList<Ordine>();
 		double totPrezzoOrdine = 0;
 		int numTotaleArticoli = 0;
 
-		List<Articoli> articoli = ordine.getArticoli();
+		List<ArticoloDettaglioOrdine> articoliNew = ordineInsert.getArticoloDettaglioOrdine();
 
-		for (Articoli articoloRead : articoli) {
-			Articoli articolo = articoliRepository.findById(articoloRead.getIdArticolo()).get();
+		for (ArticoloDettaglioOrdine articoloRead : articoliNew) {
+			Articolo articolo = articoliRepository.findById(articoloRead.getArticolo().getIdArticolo()).get();
 			numTotaleArticoli = numTotaleArticoli + articoloRead.getQuantita();
 			totPrezzoOrdine = totPrezzoOrdine + (articolo.getPrezzo() * articoloRead.getQuantita());
 			OrdiniArticoli ordArt = new OrdiniArticoli();
 			ordArt.setQuantita(articoloRead.getQuantita());
 			ordArt.setTotale(articolo.getPrezzo() * articoloRead.getQuantita());
-			ordArt.setOrdini(ordine);
-			ordArt.setArticoli(articolo);
-			ordine.getOrdiniArticoli().add(ordArt);
+			ordArt.setOrdini(ordineInsert);
+			ordArt.setArticolo(articolo);
+			ordineInsert.getOrdiniArticoli().add(ordArt);
+			articoloRead.setArticolo(articolo);
 		}
+		ordineInsert.setTotPrezzo(totPrezzoOrdine);
+		ordineInsert.setTotaleArticoli(numTotaleArticoli);
+		Ordine saved = ordiniRepository.saveAndFlush(ordineInsert);
+		ordine.add(saved);
 
-		ordine.setTotPrezzo(totPrezzoOrdine);
-		ordine.setTotaleArticoli(numTotaleArticoli);
-		ordiniRepository.saveAndFlush(ordine);
 		return ordine;
 	}
 
-	public Ordini variaOrdine(int id, Ordini ordini) throws Exception {
-		Ordini ordine = ordiniRepository.findById(id).get();
+	public List<Ordine> variaOrdine(int idOrdine, Ordine ordiniVariati) throws Exception {
+		List<Ordine> ordine = new ArrayList<Ordine>();
 
-		if (ordine != null) {
+		Ordine ordineRead = ordiniRepository.findById(idOrdine).get();
 
-			double totPrezzoOrdine = ordine.getTotPrezzo();
-			int numTotaleArticoli = ordine.getTotaleArticoli();
+		if (ordineRead != null) {
 
-			List<Articoli> articoli = ordini.getArticoli();
+			double totPrezzoOrdine = ordineRead.getTotPrezzo();
+			int numTotaleArticoli = ordineRead.getTotaleArticoli();
 
-			for (Articoli articoloRead : articoli) {
-				OrdiniArticoli ordArt = ordiniArticoliRepository.findOrdineArticolo(id, articoloRead.getIdArticolo());
-				Articoli articolo = articoliRepository.findById(articoloRead.getIdArticolo()).get();
-				OrdiniArticoli ordArtNew = new OrdiniArticoli();
+			List<ArticoloDettaglioOrdine> articoli = ordiniVariati.getArticoloDettaglioOrdine();
+
+			for (ArticoloDettaglioOrdine articoloRead : articoli) {
+				Articolo articolo = articoliRepository.findById(articoloRead.getArticolo().getIdArticolo()).get();
 
 				switch (articoloRead.getAzione()) {
 
 				case "nuovo":
+					OrdiniArticoli ordArtNew = new OrdiniArticoli();
 					numTotaleArticoli = numTotaleArticoli + articoloRead.getQuantita();
 					totPrezzoOrdine = totPrezzoOrdine + (articolo.getPrezzo() * articoloRead.getQuantita());
-					ordArtNew.setOrdini(ordine);
-					ordArtNew.setArticoli(articolo);
+					ordArtNew.setOrdini(ordineRead);
+					ordArtNew.setArticolo(articolo);
 					ordArtNew.setQuantita(articoloRead.getQuantita());
 					ordArtNew.setTotale(articolo.getPrezzo() * articoloRead.getQuantita());
-					ordine.getOrdiniArticoli().add(ordArtNew);
+					ordineRead.getOrdiniArticoli().add(ordArtNew);
 					break;
 
 				case "varia":
+					for (OrdiniArticoli elaboraArticoliOrdine : ordineRead.getOrdiniArticoli()) {
+						if (articolo.getIdArticolo() == elaboraArticoliOrdine.getArticolo().getIdArticolo()) {
 // nuova quantita (totale quantita ordine - quantita ordine da modificare) + nuova quantita
 
-					numTotaleArticoli = (numTotaleArticoli - ordArt.getQuantita()) + articoloRead.getQuantita();
+							numTotaleArticoli = (numTotaleArticoli - elaboraArticoliOrdine.getQuantita())
+									+ articoloRead.getQuantita();
 // nuovo importo totale ordine (totale ordine - importo totale articolo da modificare) + (prezzo articolo * quantita)
 
-					totPrezzoOrdine = (totPrezzoOrdine - ordArt.getTotale())
-							+ (articolo.getPrezzo() * articoloRead.getQuantita());
-					ordArt.setQuantita(articoloRead.getQuantita());
-					ordArt.setTotale(articolo.getPrezzo() * articoloRead.getQuantita());
-					ordiniArticoliRepository.saveAndFlush(ordArt);
+							totPrezzoOrdine = (totPrezzoOrdine - elaboraArticoliOrdine.getTotale())
+									+ (articolo.getPrezzo() * articoloRead.getQuantita());
+							elaboraArticoliOrdine.setQuantita(articoloRead.getQuantita());
+							elaboraArticoliOrdine.setTotale(articolo.getPrezzo() * articoloRead.getQuantita());
+						}
+					}
 					break;
 
-				case "cancella":
-					numTotaleArticoli = numTotaleArticoli - ordArt.getQuantita();
-					totPrezzoOrdine = totPrezzoOrdine - ordArt.getTotale();
-					ordine.getOrdiniArticoli().remove(ordArt);
-					ordiniArticoliRepository.delete(ordArt);
-					break;
+				case "cancella": {
+//					Set<OrdiniArticoli> articoli2save = new HashSet<OrdiniArticoli>();
+//					for (OrdiniArticoli elaboraArticoliOrdine : ordineRead.getOrdiniArticoli()) {
+//						if (articolo.getIdArticolo() != elaboraArticoliOrdine.getArticolo().getIdArticolo()) {
+//							articoli2save.add(elaboraArticoliOrdine);
+//						}
+//					}
+//					ordineRead.setOrdiniArticoli(articoli2save);
+//					
+//				}
 
+					for (OrdiniArticoli elaboraArticoliOrdine : ordineRead.getOrdiniArticoli()) {
+						if (articolo.getIdArticolo() == elaboraArticoliOrdine.getArticolo().getIdArticolo()) {
+							numTotaleArticoli = numTotaleArticoli - elaboraArticoliOrdine.getQuantita();
+							totPrezzoOrdine = totPrezzoOrdine - elaboraArticoliOrdine.getTotale();
+							ordineRead.getOrdiniArticoli().remove(elaboraArticoliOrdine);
+							ordiniArticoliRepository.delete(elaboraArticoliOrdine);
+							break;
+						}
+					}
+					break;
+				}
 				}
 			}
 
 			if (numTotaleArticoli > 0) {
-				ordine.setTotPrezzo(totPrezzoOrdine);
-				ordine.setTotaleArticoli(numTotaleArticoli);
-				ordiniRepository.saveAndFlush(ordine);
+				ordineRead.setTotPrezzo(totPrezzoOrdine);
+				ordineRead.setTotaleArticoli(numTotaleArticoli);
+				ordineRead = ordiniRepository.saveAndFlush(ordineRead);
+				ordineRead.setArticoloDettaglioOrdine(createListArticoliForResponse(ordineRead));
+				ordine.add(ordineRead);
 				return ordine;
 			} else {
-				ordiniRepository.deleteById(id);
+				ordine = deleteOrdine(idOrdine);
 			}
 		}
 		return ordine;
 	}
 
-	public Ordini deleteOrdine(int id) throws Exception {
-		Ordini deleted = ordiniRepository.findById(id).get();
-		ordiniRepository.deleteById(id);
-		return deleted;
+	public List<Ordine> deleteOrdine(int idOrdine) throws Exception {
+		List<Ordine> ordine = new ArrayList<Ordine>();
+		Ordine ordineRead = ordiniRepository.findById(idOrdine).get();
+
+		if (ordineRead != null) {
+			ordiniRepository.deleteById(idOrdine);
+		}
+
+		ordineRead.setArticoloDettaglioOrdine(createListArticoliForResponse(ordineRead));
+		ordine.add(ordineRead);
+		return ordine;
 	}
 
+	private List<ArticoloDettaglioOrdine> createListArticoliForResponse(Ordine ordineForResponse) {
+		List<ArticoloDettaglioOrdine> listaArticoli = new ArrayList<ArticoloDettaglioOrdine>();
+		for (OrdiniArticoli elaboraArticolo : ordineForResponse.getOrdiniArticoli()) {
+			ArticoloDettaglioOrdine articolo = new ArticoloDettaglioOrdine();
+			articolo.setArticolo(elaboraArticolo.getArticolo());
+			articolo.setQuantita(elaboraArticolo.getQuantita());
+			listaArticoli.add(articolo);
+		}
+		return listaArticoli;
+	}
 }

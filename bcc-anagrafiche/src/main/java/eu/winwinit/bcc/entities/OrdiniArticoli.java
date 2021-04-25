@@ -33,20 +33,20 @@ public class OrdiniArticoli implements java.io.Serializable {
 	}
 
 	@Transient
-	public Ordini getOrdini() {
+	public Ordine getOrdini() {
 		return getPrimaryKey().getOrdini();
 	}
 
-	public void setOrdini(Ordini ordini) {
+	public void setOrdini(Ordine ordini) {
 		getPrimaryKey().setOrdini(ordini);
 	}
 
 	@Transient
-	public Articoli getArticoli() {
+	public Articolo getArticolo() {
 		return getPrimaryKey().getArticoli();
 	}
 
-	public void setArticoli(Articoli articoli) {
+	public void setArticolo(Articolo articoli) {
 		getPrimaryKey().setArticoli(articoli);
 	}
 

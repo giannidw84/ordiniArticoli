@@ -1,12 +1,10 @@
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\entities\Filiale.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\model\ArticoliResponse.java
-C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\model\ArticoloResponse.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\security\JWTAuthenticationEntryPoint.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\service\UtenteService.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\service\FilialeService.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\util\SwaggerConstants.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\controllers\CustomerMarkAsEditedController.java
-C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\model\OrdineResponse.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\service\StatisticsService.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\repository\ClienteRepository.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\model\StatisticsRequest.java
@@ -16,10 +14,9 @@ C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\jav
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\controllers\CustomerSearchController.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\controllers\OrdiniController.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\entities\OrdiniArticoli.java
-C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\entities\Articoli.java
-C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\entities\Ordini.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\repository\ArticoliRepository.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\Application.java
+C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\model\ArticoloDettaglioOrdine.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\controllers\BranchSearchController.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\model\Result.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\controllers\DocumentController.java
@@ -47,6 +44,7 @@ C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\jav
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\entities\Utente.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\repository\FilialeRepository.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\controllers\CustomerConfirmedListController.java
+C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\entities\Articolo.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\repository\OrdiniArticoliRepository.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\repository\RuoloRepository.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\security\JwtAuthenticationResponse.java
@@ -57,6 +55,7 @@ C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\jav
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\utility\ClienteGroupedInfo.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\controllers\ArticoliController.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\utility\ExcelParser.java
+C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\entities\Ordine.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\repository\StatisticsRepository.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\advices\ExceptionHandlerAdvice.java
 C:\Users\ut0851\Documents\CorsoJava\bcc-anagrafiche\bcc-anagrafiche\src\main\java\eu\winwinit\bcc\util\UtilClass.java

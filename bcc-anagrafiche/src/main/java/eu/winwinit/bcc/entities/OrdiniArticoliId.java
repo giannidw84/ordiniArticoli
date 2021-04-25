@@ -9,24 +9,24 @@ import javax.persistence.ManyToOne;
 @Embeddable
 public class OrdiniArticoliId  implements Serializable {
 
-	    private Articoli articoli;
-	    private Ordini ordini;
+	    private Articolo articoli;
+	    private Ordine ordini;
 	 
 	    @ManyToOne(cascade = CascadeType.ALL)
-	    public Articoli getArticoli() {
+	    public Articolo getArticoli() {
 	        return articoli;
 	    }
 	 
-	    public void setArticoli(Articoli articoli) {
+	    public void setArticoli(Articolo articoli) {
 	        this.articoli = articoli;
 	    }
 	 
 	    @ManyToOne(cascade = CascadeType.ALL)
-	    public Ordini getOrdini() {
+	    public Ordine getOrdini() {
 	        return ordini;
 	    }
 	 
-	    public void setOrdini(Ordini ordini) {
+	    public void setOrdini(Ordine ordini) {
 	        this.ordini = ordini;
 	    }
 

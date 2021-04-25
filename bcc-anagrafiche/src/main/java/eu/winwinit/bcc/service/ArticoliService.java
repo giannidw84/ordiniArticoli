@@ -2,12 +2,17 @@ package eu.winwinit.bcc.service;
 
 import java.util.List;
 
-import eu.winwinit.bcc.entities.Articoli;
+import eu.winwinit.bcc.entities.Articolo;
 
 public interface ArticoliService {
 
-	public List<Articoli> findAll() throws Exception;
-	public Articoli saveAndFlush(Articoli art) throws Exception;
-	public Articoli patch(int id, Double prezzo) throws Exception;
-	public Articoli delete(int id) throws Exception;
+	public List<Articolo> findAll() throws Exception;
+
+	public List<Articolo> findByFilter(String descArticolo, String categoria) throws Exception;
+
+	public List<Articolo> saveAndFlush(Articolo articoloInsert) throws Exception;
+
+	public List<Articolo> patch(int idArticolo, Double prezzo) throws Exception;
+
+	public List<Articolo> delete(int idArticolo) throws Exception;
 }

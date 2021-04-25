@@ -15,9 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import eu.winwinit.bcc.constants.AuthorityRolesConstants;
-import eu.winwinit.bcc.entities.Articoli;
+import eu.winwinit.bcc.entities.Articolo;
 import eu.winwinit.bcc.model.ArticoliResponse;
-import eu.winwinit.bcc.model.ArticoloResponse;
 import eu.winwinit.bcc.model.BaseResponse;
 import eu.winwinit.bcc.security.JwtTokenProvider;
 import eu.winwinit.bcc.service.ArticoliService;
@@ -39,12 +38,41 @@ public class ArticoliController {
 		Set<String> rolesSetString = UtilClass
 				.fromGrantedAuthorityToStringSet(jwtTokenProvider.getRolesFromJWT(jwtToken));
 		ArticoliResponse resp = new ArticoliResponse();
-		List<Articoli> articoliList = new ArrayList<Articoli>();
+		List<Articolo> articoliList = new ArrayList<Articolo>();
 		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_USER)) {
 			try {
 				articoliList = articoliService.findAll();
 				resp.setArticoli(articoliList);
 				resp.success();
+				resp.setArticoli(articoliList);
+			} catch (Exception e) {
+				exceptionHandling(resp, e);
+			}
+			return new ResponseEntity<>(resp, HttpStatus.OK);
+		} else {
+			resp.accessDeniedNoAdmin();
+			return new ResponseEntity<>(resp, HttpStatus.UNAUTHORIZED);
+		}
+	}
+
+	@RequestMapping(value = "/articoli-search-filter", method = RequestMethod.GET)
+	public ResponseEntity<BaseResponse> articoliSearchFilter(
+			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken,
+			@RequestParam String descArticolo, @RequestParam String categoria) throws Exception {
+		Set<String> rolesSetString = UtilClass
+				.fromGrantedAuthorityToStringSet(jwtTokenProvider.getRolesFromJWT(jwtToken));
+		ArticoliResponse resp = new ArticoliResponse();
+		List<Articolo> articoliList = new ArrayList<Articolo>();
+		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_USER)) {
+			try {
+				articoliList = articoliService.findByFilter(descArticolo, categoria);
+				if (articoliList.isEmpty()) {
+					resp.noDataFound();
+				} else {
+					resp.success();
+				}
+				resp.setArticoli(articoliList);
+
 			} catch (Exception e) {
 				exceptionHandling(resp, e);
 			}
@@ -57,15 +85,16 @@ public class ArticoliController {
 
 	@RequestMapping(value = "/articoli-insert", method = RequestMethod.POST)
 	public ResponseEntity<BaseResponse> articoliInsert(
-			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestBody Articoli art)
-			throws Exception {
+			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken,
+			@RequestBody Articolo articoloInsert) throws Exception {
 		Set<String> rolesSetString = UtilClass
 				.fromGrantedAuthorityToStringSet(jwtTokenProvider.getRolesFromJWT(jwtToken));
-		ArticoloResponse resp = new ArticoloResponse();
+		ArticoliResponse resp = new ArticoliResponse();
+		List<Articolo> articoliList = new ArrayList<Articolo>();
 		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_ADMIN)) {
 			try {
-				Articoli saved = articoliService.saveAndFlush(art);
-				resp.setArticolo(saved);
+				articoliList = articoliService.saveAndFlush(articoloInsert);
+				resp.setArticoli(articoliList);
 				resp.success();
 			} catch (Exception e) {
 				exceptionHandling(resp, e);
@@ -80,15 +109,16 @@ public class ArticoliController {
 
 	@RequestMapping(value = "/articoli-update", method = RequestMethod.PATCH)
 	public ResponseEntity<BaseResponse> articoliUpdate(
-			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestParam int id,
-			@RequestBody Articoli art) throws Exception {
+			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestParam int idArticolo,
+			@RequestBody Articolo articoloDaVariare) throws Exception {
 		Set<String> rolesSetString = UtilClass
 				.fromGrantedAuthorityToStringSet(jwtTokenProvider.getRolesFromJWT(jwtToken));
-		ArticoloResponse resp = new ArticoloResponse();
+		ArticoliResponse resp = new ArticoliResponse();
+		List<Articolo> articoliList = new ArrayList<Articolo>();
 		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_ADMIN)) {
 			try {
-				Articoli changed = articoliService.patch(id, art.getPrezzo());
-				resp.setArticolo(changed);
+				articoliList = articoliService.patch(idArticolo, articoloDaVariare.getPrezzo());
+				resp.setArticoli(articoliList);
 				resp.updateSuccess();
 			} catch (Exception e) {
 				exceptionHandling(resp, e);
@@ -103,15 +133,16 @@ public class ArticoliController {
 
 	@RequestMapping(value = "/articoli-delete", method = RequestMethod.DELETE)
 	public ResponseEntity<BaseResponse> articoliDelete(
-			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestParam int id)
+			@RequestHeader(value = AuthorityRolesConstants.HEADER_STRING) String jwtToken, @RequestParam int idArticolo)
 			throws Exception {
 		Set<String> rolesSetString = UtilClass
 				.fromGrantedAuthorityToStringSet(jwtTokenProvider.getRolesFromJWT(jwtToken));
-		ArticoloResponse resp = new ArticoloResponse();
+		ArticoliResponse resp = new ArticoliResponse();
+		List<Articolo> articoliList = new ArrayList<Articolo>();
 		if (rolesSetString.contains(AuthorityRolesConstants.ROLE_ADMIN)) {
 			try {
-				Articoli deleted = articoliService.delete(id);
-				resp.setArticolo(deleted);
+				articoliList = articoliService.delete(idArticolo);
+				resp.setArticoli(articoliList);
 				resp.deleteSuccess();
 			} catch (Exception e) {
 				exceptionHandling(resp, e);

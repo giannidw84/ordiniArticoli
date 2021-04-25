@@ -35,6 +35,9 @@ public class Result {
 	}
 
 	public String getExceptionDetails() {
+		if (exceptionDetails == null) {
+			exceptionDetails = "";
+		}
 		return exceptionDetails;
 	}
 
@@ -62,6 +65,7 @@ public class Result {
 		result.setDescription(UPDATE_SUCCESS_DESCRIPTION);
 		return result;
 	}
+
 	public static Result createErrorResult() {
 		Result result = new Result();
 		result.setCode(ERROR_CODE);
@@ -76,12 +80,11 @@ public class Result {
 		return result;
 	}
 
-
 	public static Result createAccessDeniedNoAdminResult() {
 		Result result = new Result();
 		result.setCode(ACCESS_DENIED_NO_ADMIN_CODE);
 		result.setDescription(ACCESS_DENIED_NO_ADMIN_DESCRIPTION);
 		return result;
 	}
-	
+
 }
