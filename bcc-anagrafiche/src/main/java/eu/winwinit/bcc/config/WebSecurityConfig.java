@@ -45,15 +45,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/v2/api-docs",
-                                   "/configuration/ui",
-                                   "/swagger-resources/**",
-                                   "/configuration/security",
-                                   "/swagger-ui/*",
-                                   "/webjars/**");
-    }
+//    @Override
+//    public void configure(WebSecurity web) throws Exception {
+//        web.ignoring().antMatchers("/v2/api-docs",
+//                                   "/configuration/ui",
+//                                   "/swagger-resources/**",
+//                                   "/configuration/security",
+//                                   "/swagger-ui/*",
+//                                   "/webjars/**");
+//    }
     
     // Autenticazione e autorizzazione con JWTs
     @Override
@@ -67,15 +67,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             "/api/v1/login",
                             "/api/v1/articoli",
                             "/api/v2/**",
-                            "/api/v1/checkToken"
-//                            "/v2/api-docs",
-//                            "/configuration/ui",
-//                            "/swagger-resources",
-//                            "/configuration/security"
-//                            "/swagger-ui.html",
-//                            "/webjars/**",
-//                            "/swagger-resources/**",
-//                            "/configuration/**"
+                            "/api/v1/checkToken",
+                            "/v2/api-docs",
+                            "/configuration/ui",
+                            "/swagger-resources",
+                            "/configuration/security",
+                            "/swagger-ui.html",
+                            "/webjars/**",
+                            "/swagger-resources/**",
+                            "/configuration/**"
                     ).permitAll()
                     .anyRequest().fullyAuthenticated()                   
                     .and().formLogin().loginPage("/login").permitAll()
